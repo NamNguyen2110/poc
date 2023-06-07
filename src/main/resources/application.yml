@@ -10,7 +10,6 @@ spring:
       hibernate:
         ddl-auto: update
         format_sql: true
-  data:
-    elasticsearch:
-      repositories:
-        enabled: true
+elasticsearch:
+  host: localhost
+  port: 9200
