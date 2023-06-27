@@ -1,13 +1,15 @@
 package com.sg.poc.service;
 
-import com.sg.poc.domain.dto.LawInjuryCaseDto;
-import com.sg.poc.domain.es.LawInjuryCaseES;
-import java.util.List;
+
+import com.sg.poc.domain.dto.IngestRequest;
+import com.sg.poc.domain.entity.LawInjuryCase;
 
 public interface LawInjuryCaseService {
-  String convertAndPushToES(LawInjuryCaseDto injuryCase);
 
-  List<LawInjuryCaseES> search(String keyword);
+  Integer ingest(IngestRequest request);
 
+  LawInjuryCase findById(Integer id);
+
+  LawInjuryCase search(String searchTerm);
 
 }
