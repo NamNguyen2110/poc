@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import com.sg.poc.domain.dto.IngestRequest;
+import com.sg.poc.domain.dto.SearchRequest;
 import com.sg.poc.domain.entity.HistorySearchTerm;
 import com.sg.poc.domain.entity.LawInjuryCase;
 import com.sg.poc.exception.BusinessException;
@@ -94,10 +95,10 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
 
   @Override
   @SneakyThrows
-  public Object search(String searchTerm) {
-    if (StringUtils.hasText(searchTerm)
-        && CollectionUtils.isEmpty(historySearchTermRepo.findBySearchTerm(searchTerm))) {
-      historySearchTermRepo.save(new HistorySearchTerm(searchTerm, LocalDateTime.now()));
+  public Object search(SearchRequest searchRequest) {
+    if (StringUtils.hasText(searchRequest.getQuery())
+        && CollectionUtils.isEmpty(historySearchTermRepo.findBySearchTerm(searchRequest.getQuery()))) {
+      historySearchTermRepo.save(new HistorySearchTerm(searchRequest.getQuery(), LocalDateTime.now()));
     }
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -108,9 +109,9 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
               "query": "%s"
             }
           }
-        }""", searchTerm);
+        }""", searchRequest.getQuery());
     HttpEntity<String> requestEntity = new HttpEntity<>(
-        StringUtils.hasText(searchTerm) ? requestBody : null, headers);
+        StringUtils.hasText(searchRequest.getQuery()) ? requestBody : null, headers);
     ResponseEntity<Object> responseEntity = restTemplate.exchange(
         ES_FULL_TEXT_SEARCH_URL,
         HttpMethod.POST,

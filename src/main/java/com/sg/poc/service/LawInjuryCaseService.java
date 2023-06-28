@@ -2,6 +2,7 @@ package com.sg.poc.service;
 
 
 import com.sg.poc.domain.dto.IngestRequest;
+import com.sg.poc.domain.dto.SearchRequest;
 import com.sg.poc.domain.entity.HistorySearchTerm;
 import com.sg.poc.domain.entity.LawInjuryCase;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface LawInjuryCaseService {
 
   LawInjuryCase findById(Integer id);
 
-  Object search(String searchTerm);
+  Object search(SearchRequest searchTerm);
 
   List<HistorySearchTerm> history();
 
