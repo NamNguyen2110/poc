@@ -33,8 +33,9 @@ public class ElasticSearchController {
     return ResponseEntity.ok(ApiResponse.success(injuryCaseService.findById(id)));
   }
 
-  @PostMapping(value = "/search/cases")
-  public ResponseEntity<ApiResponse<Object>> search(@RequestParam("keyword") String searchTerm) {
+  @GetMapping(value = "/search/cases")
+  public ResponseEntity<ApiResponse<Object>> search(
+      @RequestParam(value = "searchTerm", required = false) String searchTerm) {
     return ResponseEntity.ok(ApiResponse.success(injuryCaseService.search(searchTerm)));
   }
 }

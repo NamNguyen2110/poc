@@ -10,6 +10,6 @@ public interface LawInjuryCaseService {
 
   LawInjuryCase findById(Integer id);
 
-  LawInjuryCase search(String searchTerm);
+  Object search(String searchTerm);
 
 }
