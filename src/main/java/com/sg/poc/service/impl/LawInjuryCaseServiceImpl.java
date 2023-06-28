@@ -3,7 +3,7 @@ package com.sg.poc.service.impl;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.GetResponse;
-import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import com.sg.poc.domain.dto.IngestRequest;
 import com.sg.poc.domain.entity.HistorySearchTerm;
 import com.sg.poc.domain.entity.LawInjuryCase;
@@ -12,10 +12,14 @@ import com.sg.poc.repository.HistorySearchTermRepository;
 import com.sg.poc.repository.LawInjuryCaseRepository;
 import com.sg.poc.service.LawInjuryCaseService;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,11 +40,16 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
   private final LawInjuryCaseRepository lawInjuryCaseRepository;
   private final RestTemplate restTemplate;
   private final HistorySearchTermRepository historySearchTermRepo;
-  private final static String INDEX_NAME = "law_injury_case";
-  private final static String ES_FULL_TEXT_SEARCH_URL = "http://localhost:9200/law_injury_case/_search";
+  @Value("${elasticsearch.index}")
+  private String INDEX_NAME;
+  @Value("${elasticsearch.search}")
+  private String ES_FULL_TEXT_SEARCH_URL;
 
   @Override
   public Integer ingest(IngestRequest request) {
+    if (!isExist()) {
+      create();
+    }
     if (CollectionUtils.isEmpty(request.getIds())) {
       lawInjuryCaseRepository.findAll().stream().parallel().forEach(this::save);
       return Math.toIntExact(lawInjuryCaseRepository.count());
@@ -110,6 +119,13 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
     return responseEntity.getBody();
   }
 
+  @Override
+  public List<HistorySearchTerm> history() {
+    return historySearchTermRepo
+        .findAll(PageRequest.of(0, 10, Sort.by("date").descending()))
+        .getContent();
+  }
+
   private void deleteDocument(Integer id) {
     try {
       DeleteRequest deleteRequest = DeleteRequest.of(
@@ -150,11 +166,18 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
     }
   }
 
-  private Boolean isExist() {
+  private void create() {
     try {
-      CreateIndexResponse indexResponse = elasticsearchClient.indices()
+      elasticsearchClient.indices()
           .create(c -> c.index(INDEX_NAME));
-      return indexResponse.acknowledged();
+    } catch (Exception e) {
+    }
+  }
+
+  private boolean isExist() {
+    try {
+      return elasticsearchClient.indices().exists(ExistsRequest.of(e -> e.index(INDEX_NAME)))
+          .value();
     } catch (Exception e) {
       return Boolean.FALSE;
     }

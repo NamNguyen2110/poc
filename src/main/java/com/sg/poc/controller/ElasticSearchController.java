@@ -5,8 +5,6 @@ import com.sg.poc.domain.dto.IngestRequest;
 import com.sg.poc.service.LawInjuryCaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +35,10 @@ public class ElasticSearchController {
   public ResponseEntity<ApiResponse<Object>> search(
       @RequestParam(value = "searchTerm", required = false) String searchTerm) {
     return ResponseEntity.ok(ApiResponse.success(injuryCaseService.search(searchTerm)));
+  }
+
+  @GetMapping(value = "/history/cases")
+  public ResponseEntity<ApiResponse<Object>> history(){
+    return ResponseEntity.ok(ApiResponse.success(injuryCaseService.history()));
   }
 }

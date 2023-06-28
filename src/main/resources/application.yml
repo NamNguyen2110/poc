@@ -13,3 +13,5 @@ spring:
 elasticsearch:
   host: localhost
   port: 9200
+  index: law_injury_case
+  search: http://localhost:9200/law_injury_case/_search
