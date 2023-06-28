@@ -1,6 +1,10 @@
 package com.sg.poc.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sg.poc.domain.dto.LocalDateTimeDeserializer;
+import com.sg.poc.domain.dto.LocalDateTimeSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +35,8 @@ public class HistorySearchTerm {
   private String searchTerm;
   @Column(name = "date")
   @JsonProperty("date")
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   private LocalDateTime date;
 
   public HistorySearchTerm(String searchTerm, LocalDateTime date) {
