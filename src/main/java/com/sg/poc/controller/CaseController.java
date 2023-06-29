@@ -2,6 +2,7 @@ package com.sg.poc.controller;
 
 import com.sg.poc.domain.dto.ApiResponse;
 import com.sg.poc.domain.dto.IngestRequest;
+import com.sg.poc.domain.dto.SearchRequest;
 import com.sg.poc.service.LawInjuryCaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,13 @@ public class CaseController {
     return ResponseEntity.ok(ApiResponse.success(injuryCaseService.findById(id)));
   }
 
-  @GetMapping(value = "/search/cases")
-  public ResponseEntity<ApiResponse<Object>> search(
-      @RequestParam(value = "searchTerm", required = false) String searchTerm) {
-    return ResponseEntity.ok(ApiResponse.success(injuryCaseService.search(searchTerm)));
+  @PostMapping(value = "/search/cases")
+  public ResponseEntity<ApiResponse<Object>> search(@RequestBody SearchRequest searchRequest) {
+    return ResponseEntity.ok(ApiResponse.success(injuryCaseService.search(searchRequest)));
+  }
+
+  @GetMapping(value = "/history/cases")
+  public ResponseEntity<ApiResponse<Object>> history(){
+    return ResponseEntity.ok(ApiResponse.success(injuryCaseService.history()));
   }
 }
