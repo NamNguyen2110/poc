@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/poc/v1")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class CaseController {
 
   private final LawInjuryCaseService injuryCaseService;
