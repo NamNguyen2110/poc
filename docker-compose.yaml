@@ -43,7 +43,7 @@ services:
     image: hoangpt/search-engine:latest
     ports:
       - "8080:8080"
-        networks:
+    networks:
       - es-net
     depends_on:
       - search_engine
