@@ -1,17 +1,17 @@
 spring:
   application:
-    name: employee-service
+    name: search-service
   datasource:
-    url: jdbc:mysql://datamart-cmc.mysql.database.azure.com/injury_case
-    username: injury_case
-    password: Cmcg@023
+    url: ${MYSQL_CONNECTION}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     properties:
       hibernate:
         ddl-auto: update
         format_sql: true
 elasticsearch:
-  host: localhost
-  port: 9200
-  index: law_injury_case
-  search: http://localhost:9200/law_injury_case/_search
+  host: ${ES_HOST}
+  port: ${ES_PORT}
+  index: ${ES_INDEX}
+  search: http://${ES_HOST}:${ES_PORT}/${ES_INDEX}/_search

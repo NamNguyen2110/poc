@@ -23,17 +23,15 @@ public class PocConfiguration {
     return new RestTemplate();
   }
 
-  @Bean
-  public CorsFilter corsFilter() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedMethods(Collections.singletonList("*"));
-    configuration.setAllowedOrigins(Collections.singletonList("*"));
-    configuration.setAllowedHeaders(Collections.singletonList("*"));
-    configuration.setAllowCredentials(true);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return new CorsFilter(source);
-  }
-
-
+//  @Bean
+//  public CorsFilter corsFilter() {
+//    CorsConfiguration configuration = new CorsConfiguration();
+//    configuration.setAllowedMethods(Collections.singletonList("*"));
+//    configuration.setAllowedOrigins(Collections.singletonList("*"));
+//    configuration.setAllowedHeaders(Collections.singletonList("*"));
+//    configuration.setAllowCredentials(false);
+//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//    source.registerCorsConfiguration("/**", configuration);
+//    return new CorsFilter(source);
+//  }
 }
