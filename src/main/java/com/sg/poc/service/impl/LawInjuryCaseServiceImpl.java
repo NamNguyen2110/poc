@@ -102,14 +102,58 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
     }
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    String requestBody = String.format("""
+    String requestBody = """
         {
           "query": {
-            "multi_match": {
-              "query": "%s"
+            "bool": {
+              "should": [
+                { "term": { "name": "%s"}},
+                { "term": { "party_name": "%s"}},
+                { "term": { "liability": "%s"}},
+                { "term": { "plaintiff_sex": "%s"}},
+                { "term": { "plaintiff_age": "%s"}},
+                { "term": { "plaintiff_job": "%s"}},
+                { "term": { "injury": "%s"}},
+                { "term": { "treatment": "%s"}},
+                { "term": { "disabilities": "%s"}},
+                { "term": { "awarded": "%s"}}
+              ],
+              "filter": [
+                { "term": { "party_name": "Yoshida Yuna" }},
+                {
+                  "query_string": {
+                    "query": "%s"
+                  }
+                }
+              ]
+            }
+          },
+          "aggs": {
+            "part_name": {
+              "filter": {
+                "range": {
+                  "part_name": {
+                    "gte": 1,
+                    "lte": 10000
+                  }
+                }
+              }
             }
           }
-        }""", searchRequest.getQuery());
+        }
+        """;
+
+    String formattedRequestBody = String.format(requestBody,
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery(),
+        searchRequest.getQuery());
     HttpEntity<String> requestEntity = new HttpEntity<>(
         StringUtils.hasText(searchRequest.getQuery()) ? requestBody : null, headers);
     ResponseEntity<Object> responseEntity = restTemplate.exchange(
@@ -184,3 +228,7 @@ public class LawInjuryCaseServiceImpl implements LawInjuryCaseService {
     }
   }
 }
+
+
+
+
